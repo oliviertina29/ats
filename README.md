@@ -77,6 +77,23 @@ Make sure the backend and frontend use the same API URL. The default backend URL
 
 ## Project Structure
 
+```
+ats/
+│
+├── backend/
+│   └──  app.py                  # Flask backend code        
+│
+├── frontend/
+│   └── app.py                  # Streamlit frontend code
+│    
+├── instance/
+│   └── ats.db                  # SQLite database file
+│
+├── requirements.txt 
+│
+└── README.md                   # This file
+```
+
 
 ## Contributions
 
