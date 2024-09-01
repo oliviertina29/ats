@@ -1,7 +1,7 @@
 import streamlit as st
 import requests
 
-API_URL = 'http://127.0.0.1:5000/candidates'
+API_URL = 'http://127.0.0.1:5000'
 
 st.title("Applicant Tracking System")
 
@@ -15,7 +15,7 @@ def add_candidate():
             submit_button = st.form_submit_button("Add Candidate")
 
             if submit_button:
-                response = requests.post(API_URL, json={'name': name, 'email': email, 'resume': resume, 'status': status})
+                response = requests.post(f"{API_URL}/candidates", json={'name': name, 'email': email, 'resume': resume, 'status': status})
                 if response.status_code == 201:
                     st.success(response.json().get('message', 'Candidate added successfully'))
                 else:
@@ -32,7 +32,7 @@ def update_candidate():
             update_button = st.form_submit_button("Update Candidate")
 
             if update_button:
-                response = requests.put(f'{API_URL}/{candidate_id}', json={'name': name, 'email': email, 'resume': resume, 'status': status})
+                response = requests.put(f"{API_URL}/candidates/{candidate_id}", json={'name': name, 'email': email, 'resume': resume, 'status': status})
                 if response.status_code == 200:
                     st.success(response.json().get('message', 'Candidate updated successfully'))
                 else:
@@ -44,7 +44,7 @@ def delete_candidate():
         delete_button = st.button("Delete Candidate")
 
         if delete_button:
-            response = requests.delete(f'{API_URL}/{candidate_id}')
+            response = requests.delete(f"{API_URL}/candidates/{candidate_id}")
             if response.status_code == 200:
                 st.success(response.json().get('message', 'Candidate deleted successfully'))
             else:
@@ -52,7 +52,7 @@ def delete_candidate():
 
 def view_candidates():
     with st.expander("View Candidates"):
-        response = requests.get(API_URL)
+        response = requests.get(f"{API_URL}/candidates")
         if response.status_code == 200:
             candidates = response.json()
             if candidates:
@@ -64,8 +64,30 @@ def view_candidates():
         else:
             st.error('Failed to fetch candidates')
 
+def match_candidates():
+    with st.expander("Match Candidates with Job Description"):
+        job_description = st.text_area("Job Description", key='job_description')
+        match_button = st.button("Match Candidates")
+
+        if match_button:
+            if job_description:
+                response = requests.post(f"{API_URL}/match", json={'job_description': job_description})
+                if response.status_code == 200:
+                    matched_candidates = response.json()
+                    if matched_candidates:
+                        st.write("Matched Candidates (sorted by relevance):")
+                        for mc in matched_candidates:
+                            st.write(f"ID: {mc['id']}, Name: {mc['name']}, Email: {mc['email']}, Score: {mc['score']}")
+                    else:
+                        st.write("No matching candidates found.")
+                else:
+                    st.error('Failed to match candidates')
+            else:
+                st.error("Please provide a job description to match candidates.")
+
 # Call functions to render UI
 add_candidate()
 update_candidate()
 delete_candidate()
 view_candidates()
+match_candidates()

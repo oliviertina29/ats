@@ -1,5 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from collections import Counter
+import re
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ats.db'
@@ -10,7 +12,7 @@ class Candidate(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), nullable=False, unique=True)
-    resume = db.Column(db.Text, nullable=False)  # Changed to Text for larger resume content
+    resume = db.Column(db.Text, nullable=False)
     status = db.Column(db.String(50), default='Applied')
 
 with app.app_context():
@@ -78,5 +80,47 @@ def delete_candidate(id):
         return jsonify({'message': 'Candidate deleted'})
     return jsonify({'message': 'Candidate not found'}), 404
 
+# New route to handle job descriptions and scoring candidates
+@app.route('/match', methods=['POST'])
+def match_candidates():
+    data = request.get_json()
+    if 'job_description' not in data:
+        return jsonify({'message': 'Job description is required'}), 400
+    
+    job_description = data['job_description']
+    job_keywords = extract_keywords(job_description)
+
+    candidates = Candidate.query.all()
+    scored_candidates = []
+
+    for candidate in candidates:
+        resume_keywords = extract_keywords(candidate.resume)
+        score = calculate_match_score(job_keywords, resume_keywords)
+        scored_candidates.append({
+            'id': candidate.id,
+            'name': candidate.name,
+            'email': candidate.email,
+            'resume': candidate.resume,
+            'score': score
+        })
+    
+    # Sort candidates by score in descending order
+    scored_candidates.sort(key=lambda x: x['score'], reverse=True)
+    
+    return jsonify(scored_candidates)
+
+def extract_keywords(text):
+    # Simple keyword extraction based on word frequency
+    words = re.findall(r'\w+', text.lower())
+    return Counter(words)
+
+def calculate_match_score(job_keywords, resume_keywords):
+    # Simple matching score based on common keyword frequency
+    score = 0
+    for word, count in job_keywords.items():
+        if word in resume_keywords:
+            score += min(count, resume_keywords[word])
+    return score
+
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')  # Allows access from external devices if needed
+    app.run(debug=True, host='0.0.0.0')

@@ -27,7 +27,7 @@ The project is divided into two main components:
 1. **Clone the Repository:**
 
     ```bash
-    git clone <REPOSITORY_URL>
+    git clone https://github.com/oliviertina29/ats.git
     cd ats
     ```
 
@@ -74,6 +74,10 @@ Make sure the backend and frontend use the same API URL. The default backend URL
 - **Update Candidate**: Modify the details of an existing candidate.
 - **Delete Candidate**: Remove a candidate from the database.
 - **View Candidates**: Display a list of all candidates.
+- **Match Candidates with Job Description**: Submit a job description to receive a ranked list of candidates sorted by their relevance and suitability for the position based on their resumes.
+- **Automated Scoring**: The ATS automatically evaluates and scores candidates based on keyword matching and skills relevant to the job description provided.
+- **RESTful API Integration**: The backend is implemented using a RESTful API, allowing for seamless integration with various front-end applications or third-party tools.
+
 
 ## Project Structure
 
