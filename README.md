@@ -1,23 +1,87 @@
-ATS/
-│
-├── backend/                    # Dossier pour l'application Flask
-│   ├── app.py                  # Point d'entrée principal pour démarrer le serveur Flask
-│   ├── models.py               # Définitions des modèles SQLAlchemy
-│   ├── routes.py               # Routes et endpoints API Flask
-│   ├── config.py               # Configuration de l'application Flask
-│   └── __init__.py             # Initialisation du module Flask
-│
-├── frontend/                   # Dossier pour l'application Streamlit
-│   ├── app.py                  # Point d'entrée principal pour démarrer Streamlit
-│   ├── pages/                  # Dossier pour les différentes pages Streamlit
-│   │   ├── add_candidate.py    # Page pour ajouter des candidats
-│   │   ├── update_candidate.py # Page pour mettre à jour des candidats
-│   │   └── view_candidates.py  # Page pour afficher les candidats
-│   ├── utils.py                # Fonctions utilitaires pour Streamlit
-│   └── config.py               # Configuration de Streamlit (optionnelle)
-│
-├── data/                       # Dossier pour les fichiers de base de données ou autres données persistantes
-│   └── ats.db                  # Fichier de base de données SQLite
-│
-├── requirements.txt            # Fichier des dépendances Python
-└── README.md                   # Documentation du projet
+# Applicant Tracking System (ATS)
+
+## Overview
+
+The Applicant Tracking System (ATS) is a web application designed to efficiently manage job applications. The project consists of:
+
+- **Backend**: Developed with Flask, this component provides a RESTful API to manage candidate data.
+- **Frontend**: Built using Streamlit, this component provides a user-friendly interface to interact with the data.
+
+## Project Architecture
+
+The project is divided into two main components:
+
+- **Backend**: Flask application that provides an API for CRUD operations.
+- **Frontend**: Streamlit application that allows users to add, update, delete, and view candidates.
+
+## Prerequisites
+
+- Python 3.6+
+- Flask
+- Flask-SQLAlchemy
+- Streamlit
+- Requests
+
+## Installation
+
+1. **Clone the Repository:**
+
+    ```bash
+    git clone <REPOSITORY_URL>
+    cd ats
+    ```
+
+2. **Create and Activate a Virtual Environment:**
+
+    ```bash
+    python -m venv ats
+    source ats/bin/activate  # Use `ats\Scripts\activate` for Windows
+    ```
+
+3. **Install Dependencies:**
+
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+## Configuration
+
+Make sure the backend and frontend use the same API URL. The default backend URL is `http://127.0.0.1:5000`.
+
+## Usage
+
+1. **Run the Backend:**
+
+    ```bash
+    cd backend
+    python app.py
+    ```
+
+    The backend will be available at `http://127.0.0.1:5000`.
+
+2. **Run the Frontend:**
+
+    ```bash
+    cd frontend
+    streamlit run app.py
+    ```
+
+    The frontend will be available at `http://localhost:8501`.
+
+## Features
+
+- **Add Candidate**: Fill out a form to add a new candidate.
+- **Update Candidate**: Modify the details of an existing candidate.
+- **Delete Candidate**: Remove a candidate from the database.
+- **View Candidates**: Display a list of all candidates.
+
+## Project Structure
+
+
+## Contributions
+
+Contributions are welcome! Please open an issue or submit a pull request for any enhancements or bug fixes.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
