@@ -44,7 +44,7 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-API_URL = 'http://127.0.0.1:5000'
+API_URL = 'http://0.0.0.0:5000'
 
 # Centrer le titre avec HTML
 st.markdown("<h1 class='centered-title'>📋 Applicant Tracking System</h1>", unsafe_allow_html=True)
