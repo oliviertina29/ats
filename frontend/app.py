@@ -1,12 +1,58 @@
 import streamlit as st
 import requests
 
+# Ajouter CSS personnalisé pour améliorer le style
+st.markdown("""
+    <style>
+    .main {
+        background-color: #f4f4f9;
+    }
+    .st-expander {
+        background-color: #ffffff !important;
+        border: 1px solid #e0e0e0 !important;
+        border-radius: 8px !important;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+    .st-expander-header {
+        font-size: 18px;
+        font-weight: bold;
+        color: #333;
+        background-color: #f0f2f6;
+        padding: 10px;
+        border-radius: 8px 8px 0 0;
+        margin: -10px -10px 10px -10px;
+    }
+    .stButton>button {
+        background-color: #4CAF50;
+        color: white;
+        border-radius: 8px;
+        height: 40px;
+        width: 100%;
+        margin-top: 10px;
+    }
+    .stTextInput>div>div>input, .stTextArea>div>textarea {
+        border: 1px solid #dcdcdc;
+        border-radius: 4px;
+        padding: 8px;
+    }
+    .centered-title {
+        text-align: center;
+        color: #333;
+        padding: 10px 0;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
 API_URL = 'http://127.0.0.1:5000'
 
-st.title("Applicant Tracking System")
+# Centrer le titre avec HTML
+st.markdown("<h1 class='centered-title'>📋 Applicant Tracking System</h1>", unsafe_allow_html=True)
 
 def add_candidate():
-    with st.expander("Add Candidate"):
+    with st.expander("➕ Add Candidate", expanded=True):
+        st.markdown('<div class="st-expander-header">Add a New Candidate</div>', unsafe_allow_html=True)
+        st.write("Complete the form below to add a new candidate to the system.")
         with st.form(key='add_candidate_form'):
             name = st.text_input("Name", key='add_name')
             email = st.text_input("Email", key='add_email')
@@ -22,7 +68,9 @@ def add_candidate():
                     st.error('Failed to add candidate')
 
 def update_candidate():
-    with st.expander("Update Candidate"):
+    with st.expander("🔄 Update Candidate"):
+        st.markdown('<div class="st-expander-header">Update Candidate Details</div>', unsafe_allow_html=True)
+        st.write("Provide the candidate ID and updated details below.")
         candidate_id = st.number_input("Candidate ID", min_value=1, key='update_candidate_id')
         with st.form(key='update_candidate_form'):
             name = st.text_input("Name", key='update_name')
@@ -39,7 +87,9 @@ def update_candidate():
                     st.error('Failed to update candidate')
 
 def delete_candidate():
-    with st.expander("Delete Candidate"):
+    with st.expander("❌ Delete Candidate"):
+        st.markdown('<div class="st-expander-header">Delete a Candidate</div>', unsafe_allow_html=True)
+        st.write("Enter the candidate ID to delete the record.")
         candidate_id = st.number_input("Candidate ID", min_value=1, key='delete_candidate_id')
         delete_button = st.button("Delete Candidate")
 
@@ -51,7 +101,8 @@ def delete_candidate():
                 st.error('Failed to delete candidate')
 
 def view_candidates():
-    with st.expander("View Candidates"):
+    with st.expander("👀 View Candidates"):
+        st.markdown('<div class="st-expander-header">View All Candidates</div>', unsafe_allow_html=True)
         response = requests.get(f"{API_URL}/candidates")
         if response.status_code == 200:
             candidates = response.json()
@@ -65,7 +116,8 @@ def view_candidates():
             st.error('Failed to fetch candidates')
 
 def match_candidates():
-    with st.expander("Match Candidates with Job Description"):
+    with st.expander("🔍 Match Candidates with Job Description"):
+        st.markdown('<div class="st-expander-header">Match Candidates</div>', unsafe_allow_html=True)
         job_description = st.text_area("Job Description", key='job_description')
         match_button = st.button("Match Candidates")
 
@@ -85,7 +137,7 @@ def match_candidates():
             else:
                 st.error("Please provide a job description to match candidates.")
 
-# Call functions to render UI
+# Appel des fonctions pour rendre l'interface utilisateur
 add_candidate()
 update_candidate()
 delete_candidate()
