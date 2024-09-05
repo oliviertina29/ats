@@ -5,7 +5,7 @@ import requests
 st.markdown("""
     <style>
     .main {
-        background-color: #f4f4f9;
+        background-color: #e4e4ed;
     }
     .st-expander {
         background-color: #ffffff !important;
@@ -50,7 +50,7 @@ API_URL = 'http://0.0.0.0:5000'
 st.markdown("<h1 class='centered-title'>📋 Applicant Tracking System</h1>", unsafe_allow_html=True)
 
 def add_candidate():
-    with st.expander("➕ Add Candidate", expanded=True):
+    with st.expander("➕ Add Candidate"): #, expanded=True
         st.markdown('<div class="st-expander-header">Add a New Candidate</div>', unsafe_allow_html=True)
         st.write("Complete the form below to add a new candidate to the system.")
         with st.form(key='add_candidate_form'):
