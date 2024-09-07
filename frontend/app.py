@@ -155,28 +155,51 @@ def update_candidate():
     st.markdown("<h2 class='subheader'>Update Candidate Details</h2>", unsafe_allow_html=True)
     candidate_id = st.number_input("Candidate ID", min_value=1, key='update_candidate_id')
     
-    if st.button("Fetch Candidate Data"):
-        response = requests.get(f"{API_URL}/candidates/{candidate_id}")
-        if response.status_code == 200:
-            candidate = response.json()
-            with st.form(key='update_candidate_form'):
-                col1, col2 = st.columns(2)
-                with col1:
-                    name = st.text_input("Name", value=candidate['name'], key='update_name')
-                    email = st.text_input("Email", value=candidate['email'], key='update_email')
-                with col2:
-                    status = st.selectbox("Status", ["Applied", "Interviewed", "Hired", "Rejected"], index=["Applied", "Interviewed", "Hired", "Rejected"].index(candidate['status']), key='update_status')
-                resume = st.text_area("Resume", value=candidate['resume'], key='update_resume')
-                update_button = st.form_submit_button("Update Candidate")
+    if 'candidate_data' not in st.session_state:
+        st.session_state.candidate_data = None
 
-                if update_button:
-                    response = requests.put(f"{API_URL}/candidates/{candidate_id}", json={'name': name, 'email': email, 'resume': resume, 'status': status})
-                    if response.status_code == 200:
-                        st.success(response.json().get('message', 'Candidate updated successfully'))
-                    else:
-                        st.error('Failed to update candidate')
-        else:
-            st.error('Failed to fetch candidate details')
+    if st.button("Fetch Candidate Data"):
+        try:
+            response = requests.get(f"{API_URL}/candidates/{candidate_id}")
+            response.raise_for_status()
+            st.session_state.candidate_data = response.json()
+            st.success("Candidate data fetched successfully!")
+        except requests.RequestException as e:
+            st.error(f'Failed to fetch candidate details: {str(e)}')
+            st.session_state.candidate_data = None
+
+    if st.session_state.candidate_data:
+        with st.form(key='update_candidate_form'):
+            name = st.text_input("Name", value=st.session_state.candidate_data['name'])
+            email = st.text_input("Email", value=st.session_state.candidate_data['email'])
+            status_options = ["Applied", "Interviewed", "Hired", "Rejected"]
+            status = st.selectbox("Status", status_options, 
+                                  index=status_options.index(st.session_state.candidate_data['status']))
+            resume = st.text_area("Resume", value=st.session_state.candidate_data['resume'])
+            
+            update_button = st.form_submit_button("Update Candidate")
+
+            if update_button:
+                updated_data = {
+                    'name': name,
+                    'email': email,
+                    'resume': resume,
+                    'status': status
+                }
+                try:
+                    response = requests.put(f"{API_URL}/candidates/{candidate_id}", 
+                                            json=updated_data,
+                                            headers={'Content-Type': 'application/json'})
+                    response.raise_for_status()
+                    result = response.json()
+                    st.success(f"Candidate updated successfully. Last update: {result['candidate']['updated_at']}")
+                    st.session_state.candidate_data = result['candidate']
+                except requests.RequestException as e:
+                    st.error(f'Failed to update candidate: {str(e)}')
+                    if response.text:
+                        st.error(f'Server response: {response.text}')
+    else:
+        st.info("Please fetch candidate data first.")
 
 def view_candidates():
     st.markdown("<h2 class='subheader'>View All Candidates</h2>", unsafe_allow_html=True)
