@@ -70,14 +70,20 @@ Make sure the backend and frontend use the same API URL. The default backend URL
 
 ## Features
 
-- **Add Candidate**: Fill out a form to add a new candidate.
-- **Update Candidate**: Modify the details of an existing candidate.
+- **Dashboard**: Provides an overview of key statistics, including total candidates, status distribution, and recent activities.
+- **Add Candidate**: Fill out a form to add a new candidate with details such as name, email, resume, and status.
+- **Update Candidate**: Modify the details of an existing candidate, including the ability to fetch current data before editing.
 - **Delete Candidate**: Remove a candidate from the database.
-- **View Candidates**: Display a list of all candidates.
+- **View Candidates**: Display a list of all candidates with a sortable and searchable table.
 - **Match Candidates with Job Description**: Submit a job description to receive a ranked list of candidates sorted by their relevance and suitability for the position based on their resumes.
 - **Automated Scoring**: The ATS automatically evaluates and scores candidates based on keyword matching and skills relevant to the job description provided.
+- **Data Visualization**: Includes charts and graphs to visualize candidate data, such as status distribution and candidates added per month.
+- **Recent Activities Tracking**: Displays recent actions performed in the system, providing an audit trail of changes.
 - **RESTful API Integration**: The backend is implemented using a RESTful API, allowing for seamless integration with various front-end applications or third-party tools.
-
+- **User-friendly Interface**: Streamlit-based frontend provides an intuitive and responsive user interface.
+- **Real-time Data Updates**: Dashboard and other views reflect real-time data from the database.
+- **Search Functionality**: Ability to search and filter candidates based on various criteria.
+- **Responsive Design**: The application is designed to work well on both desktop and mobile devices.
 
 ## Project Structure
 
