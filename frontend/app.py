@@ -1,6 +1,7 @@
 import streamlit as st
 import requests
 import pandas as pd
+import plotly.express as px
 
 # Configuration de la page
 st.set_page_config(page_title="ATS - Applicant Tracking System", layout="wide", page_icon="📋")
@@ -101,33 +102,52 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-API_URL = 'http://0.0.0.0:5000'
+API_URL = 'http://127.0.0.1:5000'  # Assurez-vous que cette URL est correcte
 
 # Titre centré
 st.markdown("<h1 class='centered-title'>📋 Applicant Tracking System</h1>", unsafe_allow_html=True)
 
 # Barre latérale pour la navigation
 with st.sidebar:
-    st.image("https://your-logo-url.com/logo.png", width=200)  # Remplacez par l'URL de votre logo
+#    st.image("https://your-logo-url.com/logo.png", width=200)  # Remplacez par l'URL de votre logo
     st.markdown("## Navigation")
     page = st.radio("", ["Dashboard", "Add Candidate", "Update Candidate", "View Candidates", "Match Candidates"])
 
 def dashboard():
     st.markdown("<h2 class='subheader'>Dashboard</h2>", unsafe_allow_html=True)
+
+    # Récupération des données des candidats
+    try:
+        response = requests.get(f"{API_URL}/candidates")
+        response.raise_for_status()
+        candidates = response.json()
+        df = pd.DataFrame(candidates)
+    except requests.RequestException as e:
+        st.error(f"Failed to fetch candidates data: {str(e)}")
+        return
+
+    # Calcul des statistiques
+    total_candidates = len(df)
+    applied = df[df['status'] == 'Applied'].shape[0]
+    interviewed = df[df['status'] == 'Interviewed'].shape[0]
+    hired = df[df['status'] == 'Hired'].shape[0]
+
+    # Affichage des métriques
     col1, col2, col3, col4 = st.columns(4)
-    
-    # Ces valeurs devraient être récupérées depuis votre API
     with col1:
-        st.metric("Total Candidates", "100")
+        st.metric("Total Candidates", total_candidates)
     with col2:
-        st.metric("Applied", "50")
+        st.metric("Applied", applied)
     with col3:
-        st.metric("Interviewed", "30")
+        st.metric("Interviewed", interviewed)
     with col4:
-        st.metric("Hired", "20")
-    
-    st.markdown("<h3>Recent Activities</h3>", unsafe_allow_html=True)
-    # Ici, vous pouvez ajouter un tableau ou une liste des activités récentes
+        st.metric("Hired", hired)
+
+    # Graphique circulaire pour la distribution des statuts
+    st.markdown("<h3>Candidate Status Distribution</h3>", unsafe_allow_html=True)
+    status_counts = df['status'].value_counts()
+    fig = px.pie(values=status_counts.values, names=status_counts.index, title='Candidate Status Distribution')
+    st.plotly_chart(fig, use_container_width=True)
 
 def add_candidate():
     st.markdown("<h2 class='subheader'>Add a New Candidate</h2>", unsafe_allow_html=True)
@@ -208,12 +228,15 @@ def view_candidates():
         candidates = response.json()
         if candidates:
             df = pd.DataFrame(candidates)
+
+            # Ajout d'un tableau
             st.dataframe(df[['id', 'name', 'email', 'status']], use_container_width=True)
-            
+
             # Ajout d'un graphique
             st.markdown("<h3>Candidate Status Distribution</h3>", unsafe_allow_html=True)
             status_counts = df['status'].value_counts()
             st.bar_chart(status_counts)
+
         else:
             st.info("No candidates available.")
     else:
