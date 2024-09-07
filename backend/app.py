@@ -1,9 +1,11 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
 from collections import Counter
 import re
 
 app = Flask(__name__)
+CORS(app)  # Enable CORS for all routes
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ats.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
@@ -56,7 +58,7 @@ def add_candidate():
     )
     db.session.add(new_candidate)
     db.session.commit()
-    return jsonify({'message': 'Candidate added'}), 201
+    return jsonify({'message': 'Candidate added', 'id': new_candidate.id}), 201
 
 @app.route('/candidates/<int:id>', methods=['PUT'])
 def update_candidate(id):
