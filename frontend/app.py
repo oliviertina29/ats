@@ -212,8 +212,8 @@ def update_candidate():
                                             headers={'Content-Type': 'application/json'})
                     response.raise_for_status()
                     result = response.json()
-                    st.success(f"Candidate updated successfully. Last update: {result['candidate']['updated_at']}")
-                    st.session_state.candidate_data = result['candidate']
+                    #st.success(f"Candidate updated successfully. Last update: {result['candidate']['updated_at']}")
+                    #st.session_state.candidate_data = result['candidate']
                 except requests.RequestException as e:
                     st.error(f'Failed to update candidate: {str(e)}')
                     if response.text:

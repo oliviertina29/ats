@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   backend:
     build: ./backend
@@ -10,6 +8,14 @@ services:
     environment:
       - FLASK_ENV=development
       - DATABASE_URL=sqlite:////app/instance/ats.db
+    command: >
+      sh -c "
+        if [ ! -f /app/instance/ats.db ]; then
+          echo 'Database does not exist, creating a new one...'
+          python -c 'from api import db; db.create_all()'
+        fi
+        python api.py
+      "
 
   frontend:
     build: ./frontend
@@ -22,3 +28,8 @@ services:
 
 volumes:
   instance:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${PWD}/instance

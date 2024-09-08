@@ -91,15 +91,19 @@ Make sure the backend and frontend use the same API URL. The default backend URL
 ats/
 │
 ├── backend/
-│   └──  app.py                  # Flask backend code        
+│   ├── api.py
+│   ├── Dockerfile
+│   └── requirements.txt
 │
 ├── frontend/
-│   └── app.py                  # Streamlit frontend code
-│    
-├── instance/
-│   └── ats.db                  # SQLite database file
+│   ├── app.py
+│   ├── Dockerfile
+│   └── requirements.txt
 │
-├── requirements.txt 
+├── instance/
+│   └── ats.db
+│
+├── docker-compose.yml
 │
 └── README.md                   # This file
 ```
