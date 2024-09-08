@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 import requests
 import pandas as pd
@@ -102,7 +103,7 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-API_URL = 'http://127.0.0.1:5000'  # Assurez-vous que cette URL est correcte
+API_URL = os.getenv('API_URL', 'http://backend:5000')  # Assurez-vous que cette URL est correcte
 
 # Titre centré
 st.markdown("<h1 class='centered-title'>📋 Applicant Tracking System</h1>", unsafe_allow_html=True)

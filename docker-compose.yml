@@ -1,35 +1,36 @@
+version: '3.8'
+
 services:
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     ports:
       - "5000:5000"
     volumes:
+      - ./backend:/app
       - ./instance:/app/instance
     environment:
       - FLASK_ENV=development
       - DATABASE_URL=sqlite:////app/instance/ats.db
-    command: >
-      sh -c "
-        if [ ! -f /app/instance/ats.db ]; then
-          echo 'Database does not exist, creating a new one...'
-          python -c 'from api import db; db.create_all()'
-        fi
-        python api.py
-      "
+    networks:
+      - ats-network
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     ports:
       - "8501:8501"
-    depends_on:
-      - backend
+    volumes:
+      - ./frontend:/app
     environment:
       - API_URL=http://backend:5000
+    depends_on:
+      - backend
+    networks:
+      - ats-network
 
-volumes:
-  instance:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ${PWD}/instance
+networks:
+  ats-network:
+    driver: bridge

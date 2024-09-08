@@ -7,13 +7,6 @@ The Applicant Tracking System (ATS) is a web application designed to efficiently
 - **Backend**: Developed with Flask, this component provides a RESTful API to manage candidate data.
 - **Frontend**: Built using Streamlit, this component provides a user-friendly interface to interact with the data.
 
-## Project Architecture
-
-The project is divided into two main components:
-
-- **Backend**: Flask application that provides an API for CRUD operations.
-- **Frontend**: Streamlit application that allows users to add, update, delete, and view candidates.
-
 ## Prerequisites
 
 - Python 3.6+
