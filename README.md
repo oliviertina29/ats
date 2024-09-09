@@ -28,17 +28,12 @@ The Applicant Tracking System (ATS) is a web application designed to efficiently
     source ats/bin/activate  # Use `ats\Scripts\activate` for Windows
     ```
 
-3. **Install Dependencies:**
-
-    ```bash
-    pip install -r requirements.txt
-    ```
-4. Build and start the containers:
+3. Build and start the containers:
    ```
    docker-compose up --build
    ```
 
-5. Access the application:
+4. Access the application:
    - User Interface: http://localhost:8501
    - Backend API: http://localhost:5000
 
@@ -61,6 +56,8 @@ The Applicant Tracking System (ATS) is a web application designed to efficiently
 
 ```
 ats/
+│
+├── ats-env/
 │
 ├── backend/
 │   ├── api.py
