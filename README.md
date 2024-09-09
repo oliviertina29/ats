@@ -24,8 +24,7 @@ The Applicant Tracking System (ATS) is a web application designed to efficiently
 2. **Create and Activate a Virtual Environment:**
 
     ```bash
-    python -m venv ats
-    source ats/bin/activate  # Use `ats\Scripts\activate` for Windows
+    source ats-env/bin/activate  # Use `ats\Scripts\activate` for Windows
     ```
 
 3. Build and start the containers:
@@ -36,6 +35,10 @@ The Applicant Tracking System (ATS) is a web application designed to efficiently
 4. Access the application:
    - User Interface: http://localhost:8501
    - Backend API: http://localhost:5000
+
+## Preview
+
+![Dashboard Screenshot](dashboard_ats.png)
 
 ## Features
 
@@ -76,6 +79,7 @@ ats/
 │
 └── README.md                   # This file
 ```
+
 
 
 ## Contributions
