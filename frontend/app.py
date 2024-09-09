@@ -7,7 +7,6 @@ import plotly.express as px
 # Configuration de la page
 st.set_page_config(page_title="ATS - Applicant Tracking System", layout="wide", page_icon="📋")
 
-# CSS personnalisé amélioré
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
