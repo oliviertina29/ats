@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from collections import Counter
 import re
+import math
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
@@ -112,17 +113,34 @@ def match_candidates():
     return jsonify(scored_candidates)
 
 def extract_keywords(text):
-    # Simple keyword extraction based on word frequency
-    words = re.findall(r'\w+', text.lower())
-    return Counter(words)
+    # Improved keyword extraction
+    words = re.findall(r'\b\w+\b', text.lower())
+    # Remove common stop words (you can expand this list)
+    stop_words = set(['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by'])
+    return Counter([word for word in words if word not in stop_words])
 
 def calculate_match_score(job_keywords, resume_keywords):
-    # Simple matching score based on common keyword frequency
-    score = 0
-    for word, count in job_keywords.items():
-        if word in resume_keywords:
-            score += min(count, resume_keywords[word])
-    return score
+    # Calculate cosine similarity
+    common_words = set(job_keywords.keys()) & set(resume_keywords.keys())
+    
+    # Calculate the dot product
+    dot_product = sum(job_keywords[word] * resume_keywords[word] for word in common_words)
+    
+    # Calculate the magnitudes
+    job_magnitude = math.sqrt(sum(count**2 for count in job_keywords.values()))
+    resume_magnitude = math.sqrt(sum(count**2 for count in resume_keywords.values()))
+    
+    # Avoid division by zero
+    if job_magnitude == 0 or resume_magnitude == 0:
+        return 0
+    
+    # Calculate cosine similarity
+    cosine_similarity = dot_product / (job_magnitude * resume_magnitude)
+    
+    # Convert to percentage
+    percentage_match = round(cosine_similarity * 100, 2)
+    
+    return percentage_match
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
