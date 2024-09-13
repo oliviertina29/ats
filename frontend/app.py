@@ -102,7 +102,7 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-API_URL ='http://127.0.0.1:5000' # os.getenv('API_URL', 'http://backend:5000')  
+API_URL = os.getenv('API_URL', 'http://backend:5000')  # 'http://127.0.0.1:5000' if not using docker
 
 # Titre centré
 st.markdown("<h1 class='centered-title'>📋 Applicant Tracking System</h1>", unsafe_allow_html=True)
