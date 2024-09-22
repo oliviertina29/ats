@@ -3,6 +3,8 @@ import streamlit as st
 import requests
 import pandas as pd
 import plotly.express as px
+import PyPDF2
+from io import BytesIO
 
 # Configuration de la page
 st.set_page_config(page_title="ATS - Applicant Tracking System", layout="wide", page_icon="📋")
@@ -157,12 +159,27 @@ def add_candidate():
             email = st.text_input("Email", key='add_email')
         with col2:
             status = st.selectbox("Status", ["Applied", "Interviewed", "Hired", "Rejected"], key='add_status')
-        resume = st.text_area("Resume", key='add_resume')
+        
+        # File uploader for resume
+        resume_file = st.file_uploader("Upload Resume (PDF)", type=["pdf"], key='add_resume')
+
         submit_button = st.form_submit_button("Add Candidate")
 
         if submit_button:
-            if name and email and resume:
-                response = requests.post(f"{API_URL}/candidates", json={'name': name, 'email': email, 'resume': resume, 'status': status})
+            if name and email and resume_file:
+                # Read the PDF file
+                pdf_reader = PyPDF2.PdfReader(resume_file)
+                resume_text = ""
+                for page in pdf_reader.pages:
+                    resume_text += page.extract_text()  # Extract text from each page
+
+                # Send the candidate data to the backend
+                response = requests.post(f"{API_URL}/candidates", json={
+                    'name': name,
+                    'email': email,
+                    'resume': resume_text,  # Use the extracted text
+                    'status': status
+                })
                 if response.status_code == 201:
                     st.success(response.json().get('message', 'Candidate added successfully'))
                 else:
