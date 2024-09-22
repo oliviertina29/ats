@@ -102,14 +102,13 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-API_URL = os.getenv('API_URL', 'http://backend:5000')  # 'http://127.0.0.1:5000' if not using docker
+API_URL = 'http://127.0.0.1:5000' # os.getenv('API_URL', 'http://backend:5000')  # if not using docker
 
 # Titre centré
 st.markdown("<h1 class='centered-title'>📋 Applicant Tracking System</h1>", unsafe_allow_html=True)
 
 # Barre latérale pour la navigation
 with st.sidebar:
-#    st.image("https://your-logo-url.com/logo.png", width=200)  # Remplacez par l'URL de votre logo
     st.markdown("## Navigation")
     page = st.radio("", ["Dashboard", "Add Candidate", "Update Candidate", "View Candidates", "Match Candidates"])
 
@@ -212,8 +211,7 @@ def update_candidate():
                                             headers={'Content-Type': 'application/json'})
                     response.raise_for_status()
                     result = response.json()
-                    #st.success(f"Candidate updated successfully. Last update: {result['candidate']['updated_at']}")
-                    #st.session_state.candidate_data = result['candidate']
+
                 except requests.RequestException as e:
                     st.error(f'Failed to update candidate: {str(e)}')
                     if response.text:

@@ -83,7 +83,6 @@ def delete_candidate(id):
         return jsonify({'message': 'Candidate deleted'})
     return jsonify({'message': 'Candidate not found'}), 404
 
-# New route to handle job descriptions and scoring candidates
 @app.route('/match', methods=['POST'])
 def match_candidates():
     data = request.get_json()
@@ -107,37 +106,28 @@ def match_candidates():
             'score': score
         })
     
-    # Sort candidates by score in descending order
     scored_candidates.sort(key=lambda x: x['score'], reverse=True)
-    
     return jsonify(scored_candidates)
 
 def extract_keywords(text):
-    # Improved keyword extraction
     words = re.findall(r'\b\w+\b', text.lower())
-    # Remove common stop words (you can expand this list)
     stop_words = set(['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by'])
     return Counter([word for word in words if word not in stop_words])
 
 def calculate_match_score(job_keywords, resume_keywords):
-    # Calculate cosine similarity
+
     common_words = set(job_keywords.keys()) & set(resume_keywords.keys())
     
-    # Calculate the dot product
     dot_product = sum(job_keywords[word] * resume_keywords[word] for word in common_words)
     
-    # Calculate the magnitudes
     job_magnitude = math.sqrt(sum(count**2 for count in job_keywords.values()))
     resume_magnitude = math.sqrt(sum(count**2 for count in resume_keywords.values()))
     
-    # Avoid division by zero
     if job_magnitude == 0 or resume_magnitude == 0:
         return 0
     
-    # Calculate cosine similarity
     cosine_similarity = dot_product / (job_magnitude * resume_magnitude)
     
-    # Convert to percentage
     percentage_match = round(cosine_similarity * 100, 2)
     
     return percentage_match
